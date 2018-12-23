@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>parallaxMod</name>
+	<displayName><![CDATA[Parallax Module]]></displayName>
+	<version><![CDATA[0.0.1]]></version>
+	<description><![CDATA[This is a module to add parallax effect to your shop]]></description>
+	<author><![CDATA[Gaël Robin]]></author>
+	<tab><![CDATA[front_office_features]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>
