@@ -22,7 +22,7 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
+<!--
 <div class="panel">
 	<h3><i class="icon icon-credit-card"></i> {l s='Parallax Module Configuration' mod='parallaxMod'}</h3>
 
@@ -43,7 +43,7 @@
 		</div>
 
 		<button type="submit" class="btn btn-primary">{l s='Save' mod='parallaxMod'}</button>
-	</form>
+	</form> -->
 	<!--
 
 

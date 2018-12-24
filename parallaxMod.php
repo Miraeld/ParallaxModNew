@@ -135,41 +135,51 @@ class ParallaxMod extends Module
         return array(
             'form' => array(
                 'legend' => array(
-                'title' => $this->l('Settings'),
+                'title' => $this->l('Parallax Module Settings'),
                 'icon' => 'icon-cogs',
                 ),
                 'input' => array(
+                    // array(
+                    //     'type' => 'switch',
+                    //     'label' => $this->l('Live mode'),
+                    //     'name' => 'PARALLAXMOD_LIVE_MODE',
+                    //     'is_bool' => true,
+                    //     'desc' => $this->l('Use this module in live mode'),
+                    //     'values' => array(
+                    //         array(
+                    //             'id' => 'active_on',
+                    //             'value' => true,
+                    //             'label' => $this->l('Enabled')
+                    //         ),
+                    //         array(
+                    //             'id' => 'active_off',
+                    //             'value' => false,
+                    //             'label' => $this->l('Disabled')
+                    //         )
+                    //     ),
+                    // ),
                     array(
-                        'type' => 'switch',
-                        'label' => $this->l('Live mode'),
-                        'name' => 'PARALLAXMOD_LIVE_MODE',
-                        'is_bool' => true,
-                        'desc' => $this->l('Use this module in live mode'),
-                        'values' => array(
-                            array(
-                                'id' => 'active_on',
-                                'value' => true,
-                                'label' => $this->l('Enabled')
-                            ),
-                            array(
-                                'id' => 'active_off',
-                                'value' => false,
-                                'label' => $this->l('Disabled')
-                            )
-                        ),
+                        'col' => 3,
+                        'type' => 'text',
+                        'prefix' => '<i class="icon icon-wrench"></i>',
+                        'desc' => $this->l('Enter a valid Title'),
+                        'name' => 'PARALLAXMOD_TITLE',
+                        'label' => $this->l('Title'),
                     ),
                     array(
                         'col' => 3,
                         'type' => 'text',
-                        'prefix' => '<i class="icon icon-envelope"></i>',
-                        'desc' => $this->l('Enter a valid email address'),
-                        'name' => 'PARALLAXMOD_ACCOUNT_EMAIL',
-                        'label' => $this->l('Email'),
+                        'prefix' => '<i class="icon icon-wrench"></i>',
+                        'desc' => $this->l('Enter a valid subtitle'),
+                        'name' => 'PARALLAXMOD_SUBTITLE',
+                        'label' => $this->l('Subtitle'),
                     ),
                     array(
-                        'type' => 'password',
-                        'name' => 'PARALLAXMOD_ACCOUNT_PASSWORD',
-                        'label' => $this->l('Password'),
+                      'type' => 'file',
+                      'label' => $this->l('file_url'),
+                      'name' => 'PARALLAXMOD_IMAGE',
+                      'label' => $this->l('Background Image'),
+                      'display_image' => true,
                     ),
                 ),
                 'submit' => array(
@@ -185,9 +195,9 @@ class ParallaxMod extends Module
     protected function getConfigFormValues()
     {
         return array(
-            'PARALLAXMOD_LIVE_MODE' => Configuration::get('PARALLAXMOD_LIVE_MODE', true),
-            'PARALLAXMOD_ACCOUNT_EMAIL' => Configuration::get('PARALLAXMOD_ACCOUNT_EMAIL', 'contact@prestashop.com'),
-            'PARALLAXMOD_ACCOUNT_PASSWORD' => Configuration::get('PARALLAXMOD_ACCOUNT_PASSWORD', null),
+            'PARALLAXMOD_TITLE' => Configuration::get('PARALLAXMOD_TITLE'),
+            'PARALLAXMOD_SUBTITLE' => Configuration::get('PARALLAXMOD_SUBTITLE'),
+            'PARALLAXMOD_IMAGE' => Configuration::get('PARALLAXMOD_IMAGE'),
         );
     }
 
