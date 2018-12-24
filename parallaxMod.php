@@ -93,10 +93,10 @@ class ParallaxMod extends Module
         }
 
         $this->context->smarty->assign('module_dir', $this->_path);
+        $output = $output.$this->renderForm();
+        $output .= $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');
 
-        $output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');
-
-        return $output.$this->renderForm();
+        return $output;
     }
 
     /**
@@ -132,61 +132,71 @@ class ParallaxMod extends Module
      */
     protected function getConfigForm()
     {
-        return array(
-            'form' => array(
-                'legend' => array(
-                'title' => $this->l('Parallax Module Settings'),
-                'icon' => 'icon-cogs',
-                ),
-                'input' => array(
-                    // array(
-                    //     'type' => 'switch',
-                    //     'label' => $this->l('Live mode'),
-                    //     'name' => 'PARALLAXMOD_LIVE_MODE',
-                    //     'is_bool' => true,
-                    //     'desc' => $this->l('Use this module in live mode'),
-                    //     'values' => array(
-                    //         array(
-                    //             'id' => 'active_on',
-                    //             'value' => true,
-                    //             'label' => $this->l('Enabled')
-                    //         ),
-                    //         array(
-                    //             'id' => 'active_off',
-                    //             'value' => false,
-                    //             'label' => $this->l('Disabled')
-                    //         )
-                    //     ),
-                    // ),
-                    array(
-                        'col' => 3,
-                        'type' => 'text',
-                        'prefix' => '<i class="icon icon-wrench"></i>',
-                        'desc' => $this->l('Enter a valid Title'),
-                        'name' => 'PARALLAXMOD_TITLE',
-                        'label' => $this->l('Title'),
-                    ),
-                    array(
-                        'col' => 3,
-                        'type' => 'text',
-                        'prefix' => '<i class="icon icon-wrench"></i>',
-                        'desc' => $this->l('Enter a valid subtitle'),
-                        'name' => 'PARALLAXMOD_SUBTITLE',
-                        'label' => $this->l('Subtitle'),
-                    ),
-                    array(
-                      'type' => 'file',
-                      'label' => $this->l('file_url'),
-                      'name' => 'PARALLAXMOD_IMAGE',
-                      'label' => $this->l('Background Image'),
-                      'display_image' => true,
-                    ),
-                ),
-                'submit' => array(
-                    'title' => $this->l('Save'),
-                ),
-            ),
-        );
+      return array(
+          'form' => array(
+              'legend' => array(
+              'title' => $this->l('Parallax Module Settings'),
+              'icon' => 'icon-cogs',
+              ),
+              'input' => array(
+
+                  array(
+                      'col' => 3,
+                      'type' => 'text',
+                      'prefix' => '<i class="icon icon-wrench"></i>',
+                      'desc' => $this->l('Enter a valid Title'),
+                      'name' => 'PARALLAXMOD_TITLE',
+                      'label' => $this->l('Title'),
+                      'required' => true,
+                  ),
+                  array(
+                    'col' => 3,
+                    'type' => 'text',
+                    'prefix' => '<i class="icon icon-wrench"></i>',
+                    'desc' => $this->l('Class CSS for title'),
+                    'name' => 'PARALLAXMOD_TITLE_CSS',
+                    'label' => $this->l('Class CSS'),
+                  ),
+                  array(
+                      'col' => 3,
+                      'type' => 'text',
+                      'prefix' => '<i class="icon icon-wrench"></i>',
+                      'desc' => $this->l('Enter a valid subtitle'),
+                      'name' => 'PARALLAXMOD_SUBTITLE',
+                      'label' => $this->l('Subtitle'),
+                  ),
+                  array(
+                    'col' => 3,
+                    'type' => 'text',
+                    'prefix' => '<i class="icon icon-wrench"></i>',
+                    'desc' => $this->l('Class CSS for subtitle'),
+                    'name' => 'PARALLAXMOD_SUBTITLE_CSS',
+                    'label' => $this->l('Class CSS'),
+                  ),
+                  array(
+                    'type' => 'file',
+                    'col' => 7,
+                    'label' => $this->l('file_url'),
+                    'name' => 'PARALLAXMOD_IMAGE',
+                    'label' => $this->l('Background Image'),
+                    'display_image' => true,
+                    'required' => true,
+                  ),
+                  array(
+                    'col' => 3,
+                    'type' => 'text',
+                    'prefix' => '<i class="icon icon-wrench"></i>',
+                    'desc' => $this->l('Class CSS for the image'),
+                    'name' => 'PARALLAXMOD_IMAGE_CSS',
+                    'label' => $this->l('Class CSS'),
+                  ),
+              ),
+              'submit' => array(
+                  'title' => $this->l('Save'),
+                  'name' => 'submit_form',
+              ),
+          ),
+      );
     }
 
     /**
@@ -196,8 +206,11 @@ class ParallaxMod extends Module
     {
         return array(
             'PARALLAXMOD_TITLE' => Configuration::get('PARALLAXMOD_TITLE'),
+            'PARALLAXMOD_TITLE_CSS' => Configuration::get('PARALLAXMOD_TITLE_CSS'),
             'PARALLAXMOD_SUBTITLE' => Configuration::get('PARALLAXMOD_SUBTITLE'),
+            'PARALLAXMOD_SUBTITLE_CSS' => Configuration::get('PARALLAXMOD_SUBTITLE_CSS'),
             'PARALLAXMOD_IMAGE' => Configuration::get('PARALLAXMOD_IMAGE'),
+            'PARALLAXMOD_IMAGE_CSS' => Configuration::get('PARALLAXMOD_IMAGE_CSS'),
         );
     }
 
@@ -207,12 +220,52 @@ class ParallaxMod extends Module
     protected function postProcess()
     {
         $form_values = $this->getConfigFormValues();
+        if (Tools::isSubmit('submit_form')) {
+          $allFields = Array();
+          foreach (array_keys($form_values) as $key) {
+              Configuration::updateValue($key, Tools::getValue($key));
+              $allFields[$key]=Tools::getValue($key);
+          }
 
-        foreach (array_keys($form_values) as $key) {
-            Configuration::updateValue($key, Tools::getValue($key));
+          if (!empty($allFields['PARALLAXMOD_IMAGE']) && !empty($allFields['PARALLAXMOD_TITLE'])) {
+            if ($this->insertDb($allFields)) {
+              ?>
+                <script>
+                  window.onload = function () {
+                    var success = document.getElementById('social_bar_success');
+                    success.style.display = 'block';
+                  }
+                </script>
+              <?php
+            }
+
+
+          } else {
+            ?>
+            <script>
+
+            window.onload = function () {
+              var error = document.getElementById('social_bar_error');
+              error.style.display = 'block';
+
+            }
+            </script>
+            <?php
+          }
         }
     }
-
+    public function insertDb($values) {
+      $sql = Array();
+      $sql[] = 'UPDATE `'._DB_PREFIX_.'parallaxMod`
+                SET title_parallaxMod = \''.$values['PARALLAXMOD_TITLE'].'\', title_css = \''.$values['PARALLAXMOD_TITLE_CSS'].'\', subtitle_parallaxMod = \''.$values['PARALLAXMOD_SUBTITLE'].'\', subtitle_css = \''.$values['PARALLAXMOD_SUBTITLE_CSS'].'\', img_path = \''.$values['PARALLAXMOD_IMAGE'].'\', img_css = \''.$values['PARALLAXMOD_IMAGE_CSS'].'\'
+                    WHERE id_parallaxMod =1;';
+      foreach ($sql as $query) {
+          if (Db::getInstance()->execute($query) == false) {
+              return false;
+          }
+      }
+      return true;
+    }
     /**
     * Add the CSS & JavaScript files you want to be loaded in the BO.
     */

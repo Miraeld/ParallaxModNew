@@ -26,11 +26,14 @@ $sql = array();
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'parallaxMod` (
     `id_parallaxMod` int(11) NOT NULL AUTO_INCREMENT,
     `title_parallaxMod` varchar(255) NOT NULL,
+    `title_css` TEXT,
     `subtitle_parallaxMod` varchar(255),
+    `subtitle_css` TEXT,
     `img_path` TEXT,
+    `img_css` TEXT,
     PRIMARY KEY  (`id_parallaxMod`)
 ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
-
+$sql[] = 'INSERT INTO `'. _DB_PREFIX_ .'parallaxMod` VALUES (\'1\',\'Title\',\'\', \'Subtitle\', \'\', \'path_img\', \'\')';
 foreach ($sql as $query) {
     if (Db::getInstance()->execute($query) == false) {
         return false;
