@@ -25,3 +25,21 @@
 * Don't forget to prefix your containers with your own identifier
 * to avoid any conflicts with others containers.
 */
+.main-parallax {
+    position:relative;
+
+}
+.parallax-container {
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.parallax-container h1, .parallax-container p {
+    color:white;
+} 

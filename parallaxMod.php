@@ -36,7 +36,7 @@ class ParallaxMod extends Module
     {
         $this->name = 'parallaxMod';
         $this->tab = 'front_office_features';
-        $this->version = '0.0.1';
+        $this->version = '0.2.1';
         $this->author = 'Gaël Robin';
         $this->need_instance = 0;
 
@@ -68,7 +68,7 @@ class ParallaxMod extends Module
         return parent::install() &&
             $this->registerHook('header') &&
             $this->registerHook('backOfficeHeader') &&
-            $this->registerHook('displayHome');
+            $this->registerHook('DisplayHome');
     }
 
     public function uninstall()
@@ -190,6 +190,30 @@ class ParallaxMod extends Module
                     'name' => 'PARALLAXMOD_IMAGE_CSS',
                     'label' => $this->l('Class CSS'),
                   ),
+                  array(
+                    'col' => 3,
+                    'type' => 'text',
+                    'prefix' => '<i class="icon icon-wrench"></i>',
+                    'desc' => $this->l('Height in pixels of the Parallax effect'),
+                    'name' => 'PARALLAXMOD_HEIGHT',
+                    'label' => $this->l('Height'),
+                  ),
+                  array(
+                    'col' => 3,
+                    'type' => 'text',
+                    'prefix' => '<i class="icon icon-wrench"></i>',
+                    'desc' => $this->l('Text of the link'),
+                    'name' => 'PARALLAXMOD_LINK',
+                    'label' => $this->l('Text of the link'),
+                  ),
+                  array(
+                    'col' => 3,
+                    'type' => 'text',
+                    'prefix' => '<i class="icon icon-wrench"></i>',
+                    'desc' => $this->l('CSS class for the link'),
+                    'name' => 'PARALLAXMOD_LINK_CSS',
+                    'label' => $this->l('CSS class for the link'),
+                  )
               ),
               'submit' => array(
                   'title' => $this->l('Save'),
@@ -211,6 +235,9 @@ class ParallaxMod extends Module
             'PARALLAXMOD_SUBTITLE_CSS' => Configuration::get('PARALLAXMOD_SUBTITLE_CSS'),
             'PARALLAXMOD_IMAGE' => Configuration::get('PARALLAXMOD_IMAGE'),
             'PARALLAXMOD_IMAGE_CSS' => Configuration::get('PARALLAXMOD_IMAGE_CSS'),
+            'PARALLAXMOD_HEIGHT' => Configuration::get('PARALLAXMOD_HEIGHT'),
+            'PARALLAXMOD_LINK' => Configuration::get('PARALLAXMOD_LINK'),
+            'PARALLAXMOD_LINK_CSS' => Configuration::get('PARALLAXMOD_LINK_CSS'),
         );
     }
 
@@ -221,90 +248,127 @@ class ParallaxMod extends Module
     {
         $form_values = $this->getConfigFormValues();
         if (Tools::isSubmit('submit_form')) {
-          $allFields = Array();
+          $this->allFields = Array();
           foreach (array_keys($form_values) as $key) {
               Configuration::updateValue($key, Tools::getValue($key));
-              $allFields[$key]=Tools::getValue($key);
+              $this->allFields[$key]=Tools::getValue($key);
           }
 
-          if (!empty($allFields['PARALLAXMOD_IMAGE']) && !empty($allFields['PARALLAXMOD_TITLE'])) {
-            $target_dir = _PS_UPLOAD_DIR_;
-    				$target_file = $target_dir . basename($_FILES['PARALLAXMOD_IMAGE']["name"]);
-    				$uploadOk = 1;
-    				$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-            ///
-            $check = getimagesize($_FILES['PARALLAXMOD_IMAGE']["tmp_name"]);
-  					if($check !== false) {
-  						echo "File is an image - " . $check["mime"] . ".";
-  						$uploadOk = 1;
-  					} else {
-  						echo "File is not an image.";
-  						$uploadOk = 0;
-  					}
-            if (file_exists($target_file)) {
-    					echo "Sorry, file already exists.";
-    					$uploadOk = 0;
-    				}
-            if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-      				&& $imageFileType != "gif" ) {
-      					echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-      					$uploadOk = 0;
-      				}
-      				// Check if $uploadOk is set to 0 by an error
-      				if ($uploadOk == 0) {
-      					echo "Sorry, your file was not uploaded.";
-      				}
-      				else
-      				{
-      					if (move_uploaded_file($_FILES['PARALLAXMOD_IMAGE']["tmp_name"], $target_file))
-      					{
-      						echo "The file ". basename($_FILES['PARALLAXMOD_IMAGE']["name"]). " has been uploaded.";
-      						$file_location = basename($_FILES['PARALLAXMOD_IMAGE']["name"]);
-                  $allFields['PARALLAXMOD_IMAGE'] = $target_file;
-      					}
-      					else
-      					{
-      						echo "Sorry, there was an error uploading your file.";
-      					}
-    				}
-
-            if ($this->insertDb($allFields)) {
-              ?>
-                <script>
-                  window.onload = function () {
-                    var success = document.getElementById('social_bar_success');
-                    success.style.display = 'block';
-                  }
-                </script>
-              <?php
-            }
+          if (!empty($this->allFields['PARALLAXMOD_TITLE'])) {
 
 
-          } else {
-            ?>
-            <script>
-
-            window.onload = function () {
-              var error = document.getElementById('social_bar_error');
-              error.style.display = 'block';
+            if (!empty($this->allFields['PARALLAXMOD_IMAGE'])) {
+              $this->checkImg($_FILES['PARALLAXMOD_IMAGE']);
+            } else {
+              $sql = new DbQuery();
+              $sql->select('img_path');
+              $sql->from('parallaxMod', 'a');
+              $sql->where('a.id_parallaxMod = 1');
+              $result = Db::getInstance()->executeS($sql);
+              $this->allFields['PARALLAXMOD_IMAGE'] = $result[0]['img_path'];
 
             }
-            </script>
-            <?php
+
+
+            $this->notificationDisplay($this->insertDb($this->allFields));
           }
         }
+      }
+
+
+
+    private function notificationDisplay($error) {
+      if ($error) {
+        ?>
+          <script>
+            window.onload = function () {
+              var success = document.getElementById('social_bar_success');
+              success.style.display = 'block';
+            }
+          </script>
+        <?php
+      } else {
+        ?>
+          <script>
+
+          window.onload = function () {
+            var error = document.getElementById('social_bar_error');
+            error.style.display = 'block';
+
+          }
+          </script>
+        <?php
+      }
+    }
+    private function checkImg($img) {
+      $newName = $this->randomName(15) .'.'.pathinfo(basename($img['name']),PATHINFO_EXTENSION);
+      $target_file = _PS_UPLOAD_DIR_ . $newName;
+      $upload = true;
+
+      $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+
+      if (getimagesize($img['tmp_name']) !== false) {
+        $upload = true;
+        if (!file_exists($target_file)) {
+          switch ($imageFileType) {
+            case "jpeg":
+              $upload = true;
+              break;
+            case "jpg":
+              $upload = true;
+              break;
+            case "png":
+              $upload = true;
+              break;
+            default:
+              $upload = false;
+          }
+        } else {
+          $upload = false;
+        }
+
+      } else { // if (getimagezie($img['tmp_name']) !== false)
+        $upload = false;
+      }
+
+
+      if ($upload) {
+        if (move_uploaded_file($_FILES['PARALLAXMOD_IMAGE']["tmp_name"], $target_file))
+        {
+
+          $file_location = basename($_FILES['PARALLAXMOD_IMAGE']["name"]);
+          $this->allFields['PARALLAXMOD_IMAGE'] = $newName;
+
+          return true;
+        }
+        else
+        {
+          return false;
+        }
+      } else {
+        // DISPLAY ERROR
+        return false;
+      }
+    }
+    private function randomName($length = 10){
+      return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
     }
     public function insertDb($values) {
-      $sql = Array();
-      $sql[] = 'UPDATE `'._DB_PREFIX_.'parallaxMod`
-                SET title_parallaxMod = \''.$values['PARALLAXMOD_TITLE'].'\', title_css = \''.$values['PARALLAXMOD_TITLE_CSS'].'\', subtitle_parallaxMod = \''.$values['PARALLAXMOD_SUBTITLE'].'\', subtitle_css = \''.$values['PARALLAXMOD_SUBTITLE_CSS'].'\', img_path = \''.$values['PARALLAXMOD_IMAGE'].'\', img_css = \''.$values['PARALLAXMOD_IMAGE_CSS'].'\'
-                    WHERE id_parallaxMod =1;';
-      foreach ($sql as $query) {
-          if (Db::getInstance()->execute($query) == false) {
-              return false;
-          }
+      if (empty($values['PARALLAXMOD_HEIGHT'])) {
+        $values['PARALLAXMOD_HEIGHT'] = 350;
       }
-      return true;
+
+      $query = 'UPDATE `'._DB_PREFIX_.'parallaxMod`
+                SET title_parallaxMod = \''.$values['PARALLAXMOD_TITLE'].'\', title_css = \''.$values['PARALLAXMOD_TITLE_CSS'].'\', subtitle_parallaxMod = \''.$values['PARALLAXMOD_SUBTITLE'].'\', subtitle_css = \''.$values['PARALLAXMOD_SUBTITLE_CSS'].'\', img_path = \''.$values['PARALLAXMOD_IMAGE'].'\',
+                img_css = \''.$values['PARALLAXMOD_IMAGE_CSS'].'\', height = \''.$values['PARALLAXMOD_HEIGHT'].'\'
+                    WHERE id_parallaxMod =1;';
+
+      if (Db::getInstance()->execute($query) == false) {
+          return false;
+      } else {
+        return true;
+      }
+
     }
     /**
     * Add the CSS & JavaScript files you want to be loaded in the BO.
@@ -325,11 +389,16 @@ class ParallaxMod extends Module
         $this->context->controller->addJS($this->_path.'/views/js/front.js');
         $this->context->controller->addCSS($this->_path.'/views/css/front.css');
 
+
     }
 
     public function hookDisplayHome()
     {
 
+      $datas = $this->getData()[0];
+      // $datas['img_path'] = _PS_UPLOAD_DIR_ . $datas['img_path'];
+      $this->context->smarty->assign('datas',$datas);
+      $this->context->smarty->assign('up_dir',_PS_UPLOAD_DIR_);
       $this->context->smarty->assign('module_dir', $this->_path);
 
       $output = $this->context->smarty->fetch($this->local_path.'views/templates/front/front.tpl');
@@ -338,5 +407,16 @@ class ParallaxMod extends Module
       /* Display Home Hook
        Can show anything on homepage
       */
+    }
+
+    public function getData() {
+      $sql = new DbQuery();
+      $sql->select('*');
+      $sql->from('parallaxMod', 'a');
+      $sql->where('a.id_parallaxMod = 1');
+      $result = Db::getInstance()->executeS($sql);
+
+
+      return $result;
     }
 }

@@ -23,6 +23,30 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class='GaelTest'>
-  <h1> Parallax Front template</h1>
+<div class="main-parallax">
+  <div class="parallax-img">
+    <div class="parallax {$datas['img_css']}"></div>
+  </div>
+  <div class="container parallax-container">
+    <div class="{$datas['title_css']}">
+       <h1>{$datas['title_parallaxMod']}</h1>
+    </div>
+    <div class="{$datas['subtitle_css']}">
+      <p>{$datas['subtitle_parallaxMod']}</p>
+    </div>
+  </div>
 </div>
+
+
+
+
+<style>
+.parallax {
+  background-image: url("{$up_dir}{$datas['img_path']}");
+  height: {$datas['height']}px;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+</style>

@@ -31,9 +31,10 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'parallaxMod` (
     `subtitle_css` TEXT,
     `img_path` TEXT,
     `img_css` TEXT,
+    `height` int(11),
     PRIMARY KEY  (`id_parallaxMod`)
 ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
-$sql[] = 'INSERT INTO `'. _DB_PREFIX_ .'parallaxMod` VALUES (\'1\',\'Title\',\'\', \'Subtitle\', \'\', \'path_img\', \'\')';
+$sql[] = 'INSERT INTO `'. _DB_PREFIX_ .'parallaxMod` VALUES (\'1\',\'Title\',\'\', \'Subtitle\', \'\', \'path_img\', \'\',\'350\')';
 foreach ($sql as $query) {
     if (Db::getInstance()->execute($query) == false) {
         return false;
