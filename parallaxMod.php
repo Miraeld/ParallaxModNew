@@ -24,6 +24,14 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+
+/**
+
+
+*** TODO: Delete useless Fields, make it better and working.
+
+*/
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -96,6 +104,7 @@ class ParallaxMod extends Module
         Configuration::deleteByName('PARALLAXMOD_BTN_LINK');
         Configuration::deleteByName('PARALLAXMOD_BTN_CSS');
         Configuration::deleteByName('PARALLAXMOD_RTE_CONTENT');
+        Configuration::deleteByName('PARALLAXMOD_RTE_CONTENT_1');
 
         include(dirname(__FILE__).'/sql/uninstall.php');
 
@@ -281,6 +290,7 @@ class ParallaxMod extends Module
             'PARALLAXMOD_BTN_CSS' => Configuration::get('PARALLAXMOD_BTN_CSS'),
             'PARALLAXMOD_BTN_LINK' => Configuration::get('PARALLAXMOD_BTN_LINK'),
             'PARALLAXMOD_RTE_CONTENT' => Configuration::get('PARALLAXMOD_RTE_CONTENT'),
+            'PARALLAXMOD_RTE_CONTENT_1' => Configuration::get('PARALLAXMOD_RTE_CONTENT_1'),
         );
     }
 
@@ -415,7 +425,7 @@ class ParallaxMod extends Module
       $val .= 'btn_txt = \''.$values['PARALLAXMOD_BTN'].'\', ';
       $val .= 'btn_css = \''.$values['PARALLAXMOD_BTN_CSS'].'\', ';
       $val .= 'btn_link = \''.$values['PARALLAXMOD_BTN_LINK'].'\', ';
-      $val .= 'main_body = \''.$values['PARALLAXMOD_RTE_CONTENT'].' ';
+      $val .= 'main_body = \''.$values['PARALLAXMOD_RTE_CONTENT_1'].'\' ';
 
       $query = 'UPDATE `'._DB_PREFIX_.'parallaxMod`
       			SET '. $val .'
