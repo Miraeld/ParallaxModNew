@@ -42,7 +42,7 @@
 
 <style>
 .parallax {
-  background-image: url("{$up_dir}{$datas['img_path']}");
+  background-image: url("{$datas['img_path']}");
   height: {$datas['height']}px;
   background-attachment: fixed;
   background-position: center;

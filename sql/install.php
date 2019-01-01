@@ -32,9 +32,15 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'parallaxMod` (
     `img_path` TEXT,
     `img_css` TEXT,
     `height` int(11),
+    `btn_txt` TEXT,
+    `btn_css` TEXT,
+    `btn_link` TEXT,
+    `main_body` TEXT,
     PRIMARY KEY  (`id_parallaxMod`)
 ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
-$sql[] = 'INSERT INTO `'. _DB_PREFIX_ .'parallaxMod` VALUES (\'1\',\'Title\',\'\', \'Subtitle\', \'\', \'path_img\', \'\',\'350\')';
+//$sql[] = 'INSERT INTO `'. _DB_PREFIX_ .'parallaxMod` VALUES (\'1\',\'Title\',\'\', \'Subtitle\', \'\', \'path_img\', \'\',\'350\')';
+$val = '(\'1\',\'Title\',\'titleCss\', \'Subtitle\', \'subCss\', \'https://bit.ly/2AjkHjm\', \'img-css\',\'350\',\'Button\',\'btn-css\',\'https://google.fr\',\'<p>Hello World</p>\')';
+$sql[] = 'INSERT INTO `'._DB_PREFIX_.'parallaxMod` VALUES '. $val;
 foreach ($sql as $query) {
     if (Db::getInstance()->execute($query) == false) {
         return false;

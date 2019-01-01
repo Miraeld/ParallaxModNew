@@ -36,7 +36,7 @@ class ParallaxMod extends Module
     {
         $this->name = 'parallaxMod';
         $this->tab = 'front_office_features';
-        $this->version = '0.2.1';
+        $this->version = '0.2.4';
         $this->author = 'Gaël Robin';
         $this->need_instance = 0;
 
@@ -61,6 +61,18 @@ class ParallaxMod extends Module
      */
     public function install()
     {
+        $datas = $this->getData()[0];
+        Configuration::updateValue('PARALLAXMOD_TITLE', $datas['PARALLAXMOD_TITLE']);
+        Configuration::updateValue('PARALLAXMOD_TITLE_CSS', $datas['PARALLAXMOD_TITLE_CSS']);
+        Configuration::updateValue('PARALLAXMOD_SUBTITLE', $datas['PARALLAXMOD_SUBTITLE']);
+        Configuration::updateValue('PARALLAXMOD_SUBTITLE_CSS', $datas['PARALLAXMOD_SUBTITLE_CSS']);
+        Configuration::updateValue('PARALLAXMOD_IMAGE', $datas['PARALLAXMOD_IMAGE']);
+        Configuration::updateValue('PARALLAXMOD_IMAGE_CSS', $datas['PARALLAXMOD_IMAGE_CSS']);
+        Configuration::updateValue('PARALLAXMOD_HEIGHT', $datas['PARALLAXMOD_HEIGHT']);
+        Configuration::updateValue('PARALLAXMOD_BTN', $datas['PARALLAXMOD_BTN']);
+        Configuration::updateValue('PARALLAXMOD_BTN_LINK', $datas['PARALLAXMOD_BTN_LINK']);
+        Configuration::updateValue('PARALLAXMOD_BTN_CSS', $datas['PARALLAXMOD_BTN_CSS']);
+        Configuration::updateValue('PARALLAXMOD_RTE_CONTENT', $datas['PARALLAXMOD_RTE_CONTENT'], true);
         Configuration::updateValue('PARALLAXMOD_LIVE_MODE', false);
 
         include(dirname(__FILE__).'/sql/install.php');
@@ -73,7 +85,17 @@ class ParallaxMod extends Module
 
     public function uninstall()
     {
-        Configuration::deleteByName('PARALLAXMOD_LIVE_MODE');
+        Configuration::deleteByName('PARALLAXMOD_TITLE');
+        Configuration::deleteByName('PARALLAXMOD_TITLE_CSS');
+        Configuration::deleteByName('PARALLAXMOD_SUBTITLE');
+        Configuration::deleteByName('PARALLAXMOD_SUBTITLE_CSS');
+        Configuration::deleteByName('PARALLAXMOD_IMAGE');
+        Configuration::deleteByName('PARALLAXMOD_IMAGE_CSS');
+        Configuration::deleteByName('PARALLAXMOD_HEIGHT');
+        Configuration::deleteByName('PARALLAXMOD_BTN');
+        Configuration::deleteByName('PARALLAXMOD_BTN_LINK');
+        Configuration::deleteByName('PARALLAXMOD_BTN_CSS');
+        Configuration::deleteByName('PARALLAXMOD_RTE_CONTENT');
 
         include(dirname(__FILE__).'/sql/uninstall.php');
 
@@ -158,6 +180,17 @@ class ParallaxMod extends Module
                     'label' => $this->l('Class CSS'),
                   ),
                   array(
+                    'type' => 'textarea',
+                    'label' => $this->l('Parallax Content:'),
+                    'name' => 'PARALLAXMOD_RTE_CONTENT',
+                    'lang' => true,
+                    'cols' => 30,
+                    'rows' => 10,
+                    'class' => 'rte',
+                    'autoload_rte' => true,
+                    'hint' => $this->l('Invalid characters:').' <>;=#{}'
+                  ),
+                  array(
                       'col' => 3,
                       'type' => 'text',
                       'prefix' => '<i class="icon icon-wrench"></i>',
@@ -203,15 +236,23 @@ class ParallaxMod extends Module
                     'type' => 'text',
                     'prefix' => '<i class="icon icon-wrench"></i>',
                     'desc' => $this->l('Text of the link'),
-                    'name' => 'PARALLAXMOD_LINK',
+                    'name' => 'PARALLAXMOD_BTN',
                     'label' => $this->l('Text of the link'),
                   ),
                   array(
                     'col' => 3,
                     'type' => 'text',
                     'prefix' => '<i class="icon icon-wrench"></i>',
+                    'desc' => $this->l('Please enter a valid URL'),
+                    'name' => 'PARALLAXMOD_BTN_LINK',
+                    'label' => $this->l('Link of the button'),
+                  ),
+                  array(
+                    'col' => 3,
+                    'type' => 'text',
+                    'prefix' => '<i class="icon icon-wrench"></i>',
                     'desc' => $this->l('CSS class for the link'),
-                    'name' => 'PARALLAXMOD_LINK_CSS',
+                    'name' => 'PARALLAXMOD_BTN_CSS',
                     'label' => $this->l('CSS class for the link'),
                   )
               ),
@@ -236,8 +277,10 @@ class ParallaxMod extends Module
             'PARALLAXMOD_IMAGE' => Configuration::get('PARALLAXMOD_IMAGE'),
             'PARALLAXMOD_IMAGE_CSS' => Configuration::get('PARALLAXMOD_IMAGE_CSS'),
             'PARALLAXMOD_HEIGHT' => Configuration::get('PARALLAXMOD_HEIGHT'),
-            'PARALLAXMOD_LINK' => Configuration::get('PARALLAXMOD_LINK'),
-            'PARALLAXMOD_LINK_CSS' => Configuration::get('PARALLAXMOD_LINK_CSS'),
+            'PARALLAXMOD_BTN' => Configuration::get('PARALLAXMOD_BTN'),
+            'PARALLAXMOD_BTN_CSS' => Configuration::get('PARALLAXMOD_BTN_CSS'),
+            'PARALLAXMOD_BTN_LINK' => Configuration::get('PARALLAXMOD_BTN_LINK'),
+            'PARALLAXMOD_RTE_CONTENT' => Configuration::get('PARALLAXMOD_RTE_CONTENT'),
         );
     }
 
@@ -358,10 +401,25 @@ class ParallaxMod extends Module
         $values['PARALLAXMOD_HEIGHT'] = 350;
       }
 
+      // $query = 'UPDATE `'._DB_PREFIX_.'parallaxMod`
+      //           SET title_parallaxMod = \''.$values['PARALLAXMOD_TITLE'].'\', title_css = \''.$values['PARALLAXMOD_TITLE_CSS'].'\', subtitle_parallaxMod = \''.$values['PARALLAXMOD_SUBTITLE'].'\', subtitle_css = \''.$values['PARALLAXMOD_SUBTITLE_CSS'].'\', img_path = \''.$values['PARALLAXMOD_IMAGE'].'\',
+      //           img_css = \''.$values['PARALLAXMOD_IMAGE_CSS'].'\', height = \''.$values['PARALLAXMOD_HEIGHT'].'\'
+      //               WHERE id_parallaxMod =1;';
+      $val = 'title_parallaxMod = \''.$values['PARALLAXMOD_TITLE'].'\', ';
+      $val .= 'title_css = \''. $values['PARALLAXMOD_TITLE_CSS'].'\', ';
+      $val .= 'subtitle_parallaxMod = \''.$values['PARALLAXMOD_SUBTITLE'].'\', ';
+      $val .= 'subtitle_css = \''.$values['PARALLAXMOD_SUBTITLE_CSS'].'\', ';
+      $val .= 'img_path = \''.$values['PARALLAXMOD_IMAGE'].'\', ';
+      $val .= 'img_css = \''.$values['PARALLAXMOD_IMAGE_CSS'].'\', ';
+      $val .= 'height = \''.$values['PARALLAXMOD_HEIGHT'].'\', ';
+      $val .= 'btn_txt = \''.$values['PARALLAXMOD_BTN'].'\', ';
+      $val .= 'btn_css = \''.$values['PARALLAXMOD_BTN_CSS'].'\', ';
+      $val .= 'btn_link = \''.$values['PARALLAXMOD_BTN_LINK'].'\', ';
+      $val .= 'main_body = \''.$values['PARALLAXMOD_RTE_CONTENT'].' ';
+
       $query = 'UPDATE `'._DB_PREFIX_.'parallaxMod`
-                SET title_parallaxMod = \''.$values['PARALLAXMOD_TITLE'].'\', title_css = \''.$values['PARALLAXMOD_TITLE_CSS'].'\', subtitle_parallaxMod = \''.$values['PARALLAXMOD_SUBTITLE'].'\', subtitle_css = \''.$values['PARALLAXMOD_SUBTITLE_CSS'].'\', img_path = \''.$values['PARALLAXMOD_IMAGE'].'\',
-                img_css = \''.$values['PARALLAXMOD_IMAGE_CSS'].'\', height = \''.$values['PARALLAXMOD_HEIGHT'].'\'
-                    WHERE id_parallaxMod =1;';
+      			SET '. $val .'
+      			WHERE id_parallaxMod = 1;';
 
       if (Db::getInstance()->execute($query) == false) {
           return false;
