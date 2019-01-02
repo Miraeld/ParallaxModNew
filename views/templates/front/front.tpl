@@ -17,32 +17,32 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2018 PrestaShop SA
+*  @author    Gaël ROBIN <gael@luxury-concept.com>
+*  @copyright 2018-2019 - Pimclick
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+*
 *}
 
 <div class="main-parallax">
   <div class="parallax-img">
-    <div class="parallax {$datas['img_css']}"></div>
+    <div class="parallax-mod {$datas['img_css']}"></div>
   </div>
   <div class="container parallax-container">
     <div class="{$datas['title_css']}">
-       <h1>{$datas['title_parallaxMod']}</h1>
+      <h1>{$datas['title_parallaxMod']}</h1>
     </div>
-    <div class="{$datas['subtitle_css']}">
-      <p>{$datas['subtitle_parallaxMod']}</p>
+    <div class="parallax-content">
+      {$datas['main_body']|unescape: "html" nofilter}
+
     </div>
   </div>
 </div>
 
 
 
-
 <style>
-.parallax {
-  background-image: url("{$datas['img_path']}");
+.parallax-mod {
+  background-image: url("{$pathway_img}");
   height: {$datas['height']}px;
   background-attachment: fixed;
   background-position: center;

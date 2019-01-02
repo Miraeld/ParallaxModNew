@@ -2,8 +2,8 @@
 <module>
     <name>parallaxMod</name>
     <displayName><![CDATA[Parallax Module]]></displayName>
-    <version><![CDATA[0.2.1]]></version>
-    <description><![CDATA[This is a module to add parallax effect to your shop]]></description>
+    <version><![CDATA[1.0.0]]></version>
+    <description><![CDATA[This module is allowing you to add a parallax effect on the home page of your shop]]></description>
     <author><![CDATA[Ga&euml;l Robin]]></author>
     <tab><![CDATA[front_office_features]]></tab>
 	<confirmUninstall><![CDATA[Are you sure you want to delete this module?]]></confirmUninstall>

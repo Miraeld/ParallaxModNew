@@ -1,5 +1,4 @@
-{*
-* 2007-2018 PrestaShop
+{* 2007-2019 Gaël ROBIN
 *
 * NOTICE OF LICENSE
 *
@@ -17,10 +16,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2018 PrestaShop SA
+*  @author    Gaël ROBIN <gael@luxury-concept.com>
+*  @copyright 2007-2019 Pimclick
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+*
 *}
 
 <div class="alert alert-success" id="social_bar_success" style="display:none;">
@@ -29,15 +28,10 @@
 <div class="alert alert-danger" id="social_bar_error" style="display:none;">
   <strong>Error!</strong> Please try again.
 </div>
-
-
 <div class="panel">
 	<h3><i class="icon icon-tags"></i> {l s='Documentation' mod='parallaxMod'}</h3>
 	<p>
-		&raquo; {l s='You can get a PDF documentation to configure this module' mod='parallaxMod'} :
-		<ul>
-			<li><a href="#" target="_blank">{l s='English' mod='parallaxMod'}</a></li>
-			<li><a href="#" target="_blank">{l s='French' mod='parallaxMod'}</a></li>
-		</ul>
+		&raquo; {l s='If you have any suggestions or request, you can contact the author of the module by clicking ' mod='parallaxMod'}:
+    <a href="mailto:gael@luxury-concept.com">{l s='here' mod='parallaxMod'}</a>
 	</p>
 </div>
