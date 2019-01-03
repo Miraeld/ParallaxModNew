@@ -36,7 +36,7 @@ class ParallaxMod extends Module
     {
         $this->name = 'parallaxMod';
         $this->tab = 'front_office_features';
-        $this->version = '1.0.0';
+        $this->version = '1.0.2';
         $this->author = 'Gaël Robin';
         $this->need_instance = 0;
 

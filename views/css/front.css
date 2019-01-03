@@ -42,3 +42,6 @@
 .parallax-container, .parallax-content p {
     color:white;
 }
+#parallaxMod {
+  margin:50px 0;
+}

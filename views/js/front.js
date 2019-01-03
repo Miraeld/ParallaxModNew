@@ -22,15 +22,13 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *
 */
-
-//Parallax
 function simpleParallax() {
-    //This variable is storing the distance scrolled
-    var scrolled = $(window).scrollTop() + 1;
+	var velocity = 0.1;
 
-    //Every element with the class "scroll" will have parallax background
-    //Change the "0.3" for adjusting scroll speed.
-    $('.scroll').css('background-position', '0' + -(scrolled * 0.3) + 'px');
+  var scrolled = $(window).scrollTop();
+  var movement = -(scrolled*velocity);
+  $('.parallax-mod.parallax-img').css('background-position', '0' + movement + 'px');
+
 }
 //Everytime we scroll, it will fire the function
 $(window).scroll(function (e) {
