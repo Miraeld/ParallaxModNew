@@ -16,6 +16,19 @@ Also, there is the possibility to modify or add any CSS and/or JS in order to cu
 
 If you need further details, feel free to contact me at: gael@luxury-concept.com
 
+
+# Back-office view
+
+This view is used to configure the module. It manages multi-lang website in order to display different text depending on languages
+
+![alt text](https://nsa39.casimages.com/img/2019/01/03/1901030608278456.png)
+
+# Front end view
+
+This view is used to display on the homepage of your shop a parallax effect.
+
+![alt text](https://nsa39.casimages.com/img/2019/01/03/190103060827737225.png)
+
 # License
 
 This project is protected
