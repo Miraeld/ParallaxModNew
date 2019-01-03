@@ -22,31 +22,34 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *
 *}
+<section id="parallaxMod">
+  <div class="row">
+    <div class="main-parallax">
+      <div class="parallax-img">
+        <div class="parallax-mod {$datas['img_css']}"></div>
+      </div>
+      <div class="container parallax-container">
+        <div class="{$datas['title_css']}">
+          <h1>{$datas['title_parallaxMod']}</h1>
+        </div>
+        <div class="parallax-content">
+          {$datas['main_body']|unescape: "html" nofilter}
 
-<div class="main-parallax">
-  <div class="parallax-img">
-    <div class="parallax-mod {$datas['img_css']}"></div>
-  </div>
-  <div class="container parallax-container">
-    <div class="{$datas['title_css']}">
-      <h1>{$datas['title_parallaxMod']}</h1>
+        </div>
+      </div>
     </div>
-    <div class="parallax-content">
-      {$datas['main_body']|unescape: "html" nofilter}
 
-    </div>
+
+
+    <style>
+    .parallax-mod {
+      background-image: url("{$pathway_img}");
+      height: {$datas['height']}px;
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+    </style>
   </div>
-</div>
-
-
-
-<style>
-.parallax-mod {
-  background-image: url("{$pathway_img}");
-  height: {$datas['height']}px;
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-</style>
+</section>
