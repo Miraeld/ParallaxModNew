@@ -16,7 +16,7 @@ Also, there is the possibility to modify or add any CSS and/or JS in order to cu
 
 If you need further details, feel free to contact me at: gael@luxury-concept.com
 
-#License
+# License
 
 This project is protected
 
