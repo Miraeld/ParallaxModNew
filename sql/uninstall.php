@@ -24,7 +24,9 @@
 *
 */
 $sql = array();
+// $sql[] = 'DROP TABLE `' . _DB_PREFIX_ . 'parallaxMod`';
 $sql[] = 'DROP TABLE `' . _DB_PREFIX_ . 'parallaxMod`';
+$sql[] = 'DROP TABLE `' . _DB_PREFIX_ . 'parallaxMod_lang`';
 foreach ($sql as $query) {
     if (Db::getInstance()->execute($query) == false) {
         return false;

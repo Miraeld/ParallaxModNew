@@ -35,10 +35,10 @@ class ParallaxMod extends Module
     public function __construct()
     {
         $this->name = 'parallaxMod';
-        $this->tab = 'front_office_features';
-        $this->version = '1.0.2';
+        $this->tab = 'administration';
+        $this->version = '2.0.0';
         $this->author = 'Gaël Robin';
-        $this->need_instance = 0;
+        $this->need_instance = 1;
 
         /**
          * Set $this->bootstrap to true if your module is compliant with bootstrap (PrestaShop 1.6)
@@ -64,17 +64,11 @@ class ParallaxMod extends Module
         return parent::install() &&
             $this->registerHook('header') &&
             $this->registerHook('backOfficeHeader') &&
-            $this->registerHook('DisplayHome');
+            $this->registerHook('displayHome');
     }
 
     public function uninstall()
     {
-        Configuration::deleteByName('PARALLAXMOD_TITLE');
-        Configuration::deleteByName('PARALLAXMOD_TITLE_CSS');
-        Configuration::deleteByName('PARALLAXMOD_IMAGE');
-        Configuration::deleteByName('PARALLAXMOD_IMAGE_CSS');
-        Configuration::deleteByName('PARALLAXMOD_HEIGHT');
-        Configuration::deleteByName('PARALLAXMOD_RTE_CONTENT');
 
         include(dirname(__FILE__).'/sql/uninstall.php');
 
@@ -140,13 +134,12 @@ class ParallaxMod extends Module
               'icon' => 'icon-cogs',
               ),
               'input' => array(
-
                   array(
                       'col' => 4,
                       'type' => 'text',
                       'prefix' => '<i class="icon icon-wrench"></i>',
                       'desc' => $this->l('Enter a Title which will be displayed on the parallax effect'),
-                      'name' => 'PARALLAXMOD_TITLE',
+                      'name' => 'title',
                       'label' => $this->l('Title'),
                       'lang' => true,
                       'required' => true,
@@ -156,14 +149,28 @@ class ParallaxMod extends Module
                     'type' => 'text',
                     'prefix' => '<i class="icon icon-wrench"></i>',
                     'desc' => $this->l('CSS class for the title'),
-                    'name' => 'PARALLAXMOD_TITLE_CSS',
+                    'name' => 'title_css',
                     'label' => $this->l('Title CSS Class'),
                   ),
+
                   array(
+                   'type' => 'color',
+                   'label' => $this->l('Title Color'),
+                   'name' => 'title_color',
+                   'col' => 8,
+                 ),
+                 array(
+                    'type' => 'text',
+                    'label' => $this->l('Title size'),
+                    'name' => 'title_size',
+                    'desc' => $this->l('Please enter the unit such as (20px, 20pt, etc...)'),
+                    'col' =>3,
+                 ),
+                 array(
                     'type' => 'textarea',
                     'col' => 6,
                     'label' => $this->l('Description content:'),
-                    'name' => 'PARALLAXMOD_RTE_CONTENT',
+                    'name' => 'main_body',
                     'lang' => true,
                     'cols' => 30,
                     'rows' => 10,
@@ -175,7 +182,7 @@ class ParallaxMod extends Module
                     'type' => 'file',
                     'col' => 7,
                     'label' => $this->l('file_url'),
-                    'name' => 'PARALLAXMOD_IMAGE',
+                    'name' => 'img_path',
                     'label' => $this->l('Background Image'),
                     'display_image' => true,
                     'required' => false,
@@ -185,17 +192,17 @@ class ParallaxMod extends Module
                     'type' => 'text',
                     'prefix' => '<i class="icon icon-wrench"></i>',
                     'desc' => $this->l('CSS class for the image'),
-                    'name' => 'PARALLAXMOD_IMAGE_CSS',
-                    'label' => $this->l('CSS class'),
+                    'name' => 'img_css',
+                    'label' => $this->l('Image CSS class'),
                   ),
                   array(
                     'col' => 3,
                     'type' => 'text',
                     'prefix' => '<i class="icon icon-wrench"></i>',
                     'desc' => $this->l('Height in pixels of the Parallax effect'),
-                    'name' => 'PARALLAXMOD_HEIGHT',
+                    'name' => 'height',
                     'label' => $this->l('Height'),
-                  )
+                  ),
               ),
               'submit' => array(
                   'title' => $this->l('Save'),
@@ -215,13 +222,15 @@ protected function getConfigFormValues()
 
       foreach ($languages as $lang) {
         $data_db = $this->getData((int)$lang['id_lang'])[0];
-        $fields['PARALLAXMOD_TITLE'][$lang['id_lang']] = $data_db['title_parallaxMod'];
-        $fields['PARALLAXMOD_RTE_CONTENT'][$lang['id_lang']] = $data_db['main_body'];
+        $fields['title'][$lang['id_lang']] = $data_db['title'];
+        $fields['main_body'][$lang['id_lang']] = $data_db['main_body'];
       }
-      $fields['PARALLAXMOD_TITLE_CSS'] = $data_db['title_css'];
-      $fields['PARALLAXMOD_IMAGE'] = $data_db['img_path'];
-      $fields['PARALLAXMOD_IMAGE_CSS'] = $data_db['img_css'];
-      $fields['PARALLAXMOD_HEIGHT'] = $data_db['height'];
+      $fields['title_css'] = $data_db['title_css'];
+      $fields['img_path'] = $data_db['img_path'];
+      $fields['img_css'] = $data_db['img_css'];
+      $fields['height'] = $data_db['height'];
+      $fields['title_color'] = $data_db['title_color'];
+      $fields['title_size'] = $data_db['title_size'];
       return $fields;
 
     }
@@ -241,29 +250,34 @@ protected function getConfigFormValues()
           $update_images_values = false;
 
           foreach ($languages as $lang) {
-            $values['PARALLAXMOD_TITLE'][$lang['id_lang']] = Tools::getValue('PARALLAXMOD_TITLE_'.$lang['id_lang']);
-            $values['PARALLAXMOD_RTE_CONTENT'][$lang['id_lang']] = Tools::getValue('PARALLAXMOD_RTE_CONTENT_'.$lang['id_lang']);
+            $values['title'][$lang['id_lang']] = Tools::getValue('title_'.$lang['id_lang']);
+            $values['main_body'][$lang['id_lang']] = Tools::getValue('main_body_'.$lang['id_lang']);
 
           }
-          $values['PARALLAXMOD_TITLE_CSS'] = Tools::getValue('PARALLAXMOD_TITLE_CSS');
-          $values['PARALLAXMOD_IMAGE'] = Tools::getValue('PARALLAXMOD_IMAGE');
-          $values['PARALLAXMOD_IMAGE_CSS'] = Tools::getValue('PARALLAXMOD_IMAGE_CSS');
-          $values['PARALLAXMOD_HEIGHT'] = Tools::getValue('PARALLAXMOD_HEIGHT');
+          $values['title_css'] = Tools::getValue('title_css');
+          $values['img_path'] = Tools::getValue('img_path');
+          $values['img_css'] = Tools::getValue('img_css');
+          $values['height'] = Tools::getValue('height');
+          $values['title_size'] = Tools::getValue('title_size');
+          $values['title_color'] = Tools::getValue('title_color');
 
           $this->allFields = $values;
 
-          if (!empty($this->allFields['PARALLAXMOD_TITLE'][$this->context->language->id])) {
+          if (!empty($this->allFields['title'][$this->context->language->id])) {
 
 
-            if (!empty($this->allFields['PARALLAXMOD_IMAGE'])) {
-              $this->checkImg($_FILES['PARALLAXMOD_IMAGE']);
+            if (!empty($this->allFields['img_path'])) {
+              $this->checkImg($_FILES['img_path']);
+
             } else {
+
               $sql = new DbQuery();
               $sql->select('img_path');
               $sql->from('parallaxMod', 'a');
-              $sql->where('a.main_id_parallaxMod = 1');
+              $sql->where('a.id_parallaxMod = 1');
               $result = Db::getInstance()->executeS($sql);
-              $this->allFields['PARALLAXMOD_IMAGE'] = $result[0]['img_path'];
+              $this->allFields['img_path'] = $result[0]['img_path'];
+
             }
             $this->notificationDisplay($this->insertDb($this->allFields));
           } else {
@@ -330,11 +344,11 @@ protected function getConfigFormValues()
 
 
       if ($upload) {
-        if (move_uploaded_file($_FILES['PARALLAXMOD_IMAGE']["tmp_name"], $target_file))
+        if (move_uploaded_file($_FILES['img_path']["tmp_name"], $target_file))
         {
 
-          $file_location = basename($_FILES['PARALLAXMOD_IMAGE']["name"]);
-          $this->allFields['PARALLAXMOD_IMAGE'] = $newName;
+          $file_location = basename($_FILES['img_path']["name"]);
+          $this->allFields['img_path'] = $newName;
 
           return true;
         }
@@ -351,27 +365,60 @@ protected function getConfigFormValues()
       return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
     }
     public function insertDb($values) {
-      if (empty($values['PARALLAXMOD_HEIGHT'])) {
-        $values['PARALLAXMOD_HEIGHT'] = 350;
-      }
+      // if (empty($values['height'])) {
+      //   $values['height'] = 350;
+      // }
       $sql = array();
-      foreach (Language::getLanguages(false) as $lang) {
-        $val ='';
-        $val .= 'title_parallaxMod = \''.$values['PARALLAXMOD_TITLE'][$lang['id_lang']].'\', ';
-        $val .= 'title_css = \''. $values['PARALLAXMOD_TITLE_CSS'].'\', ';
-        $val .= 'img_path = \''.$values['PARALLAXMOD_IMAGE'].'\', ';
-        $val .= 'img_css = \''.$values['PARALLAXMOD_IMAGE_CSS'].'\', ';
-        $val .= 'height = \''.$values['PARALLAXMOD_HEIGHT'].'\', ';
-        $val .= 'main_body = \''.$values['PARALLAXMOD_RTE_CONTENT'][$lang['id_lang']].'\' ';
 
-        $sql[] = 'UPDATE `'._DB_PREFIX_.'parallaxMod`
-      			SET '. $val .'
-      			WHERE id_parallaxMod = 1 AND id_lang = '.(int)$lang['id_lang'].';';
+      /*
+
+
+UPDATE `ps_parallaxMod` as pm
+	LEFT JOIN `ps_parallaxMod_lang` as pml ON pm.id_parallaxMod = pml.id_parallaxMod
+    SET pm.title_css = 'newTitleCss', pm.height = 500, pm.title_color='#fff', pm.title_size = '30px', pml.title = 'New Title test'
+	WHERE pml.id_lang =1;
+      */
+      foreach (Language::getLanguages(false) as $lang) {
+        // $val ='';
+        // $val .= 'title = \''.$values['title'][$lang['id_lang']].'\', ';
+        // $val .= 'title_css = \''. $values['title_css'].'\', ';
+        // $val .= 'img_path = \''.$values['img_path'].'\', ';
+        // $val .= 'img_css = \''.$values['img_css'].'\', ';
+        // $val .= 'height = \''.$values['height'].'\', ';
+        // $val .= 'main_body = \''.$values['main_body'][$lang['id_lang']].'\' ';
+        //
+        // $sql[] = 'UPDATE `'._DB_PREFIX_.'parallaxMod`
+      	// 		SET '. $val .'
+      	// 		WHERE id_parallaxMod = 1 AND id_lang = '.(int)$lang['id_lang'].';';
+
+      $val ='';
+      foreach ($values as $key => $value) {
+    	   if (!empty($val) && (substr($val,-1,2)!=', '))
+    		     $val.=', ';
+
+
+         (!empty($value))?$val.=$key.' = \''. $value.'\'':false;
       }
+      /*
+UPDATE `ps_parallaxMod` as pm
+	LEFT JOIN `ps_parallaxMod_lang` as pml ON pm.id_parallaxMod = pml.id_parallaxMod
+    SET pm.title_css = 'newTitleCss', pm.height = 500, pm.title_color='#fff', pm.title_size = '30px', pml.title = 'New Title test'
+	WHERE pml.id_lang =1;
+  */
+  $sql[] = 'UPDATE `'._DB_PREFIX_.'parallaxMod` as pm
+              LEFT JOIN `'._DB_PREFIX_.'parallaxMod_lang` as pml ON pm.id_parallaxMod = pml.id_parallaxMod
+              SET '.$val.'
+              WHERE pml.id_lang = '.$lang['id_lang'];
+/* TODO : CORRECT SQL WITH TITLE AND MAIN_BODY LANG */
+
+      }
+      var_dump($sql);
+      exit;
       foreach ($sql as $query) {
-          if (Db::getInstance()->execute($query) == false) {
-              return false;
-          }
+
+          // if (Db::getInstance()->execute($query) == false) {
+          //     return false;
+          // }
       }
       return true;
 
@@ -425,10 +472,13 @@ protected function getConfigFormValues()
       }
 
     public function getData($id_lang) {
+      //SELECT * FROM `par` as pm LEFT JOIN `par_lang` as pml ON pm.id_parallaxMod = pml.id_parallaxMod WHERE pml.id_lang = 1;
       $sql = new DbQuery();
       $sql->select('*');
-      $sql->from('parallaxMod', 'a');
-      $sql->where('a.id_parallaxMod = 1 AND a.id_lang = \''.$id_lang.'\'');
+      $sql->from('parallaxMod', 'pm');
+      $sql->leftJoin('parallaxMod_lang','pml','pm.id_parallaxMod = pml.id_parallaxMod');
+      $sql->where('pml.id_lang = '.$id_lang);
+
       $result = Db::getInstance()->executeS($sql);
 
 
