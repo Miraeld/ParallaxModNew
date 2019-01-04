@@ -23,7 +23,7 @@
 *
 */
 function simpleParallax() {
-	var velocity = 0.1;
+	var velocity = 0.01;
 
   var scrolled = $(window).scrollTop();
   var movement = -(scrolled*velocity);

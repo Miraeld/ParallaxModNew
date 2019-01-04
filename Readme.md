@@ -8,10 +8,10 @@ This module create a parallax effect added to your shop home page.
 It manages only 1 parallax effect for the moment as it still be a Work In Progress Module.
 
 
-There is the possibility to add the content through a TinyMCE text area which means your HTML code.
+You have the possibility to add the content through a TinyMCE text area which means your custom HTML code.
 
 
-Also, there is the possibility to modify or add any CSS and/or JS in order to custom your parallax effect.
+Also, you have the possibility to modify or add any CSS and/or JS in order to custom your parallax effect.
 
 
 If you need further details, feel free to contact me at: gael@luxury-concept.com
