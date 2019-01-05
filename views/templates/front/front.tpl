@@ -1,5 +1,5 @@
-{*
-* 2007-2018 PrestaShop
+{**
+* 2007-2019 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author    Gaël ROBIN <gael@luxury-concept.com>
-*  @copyright 2018-2019 - Pimclick
+*  @author    PrestaShop SA <contact@prestashop.com>
+*  @copyright 2007-2019 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*
+*  International Registered Trademark & Property of PrestaShop SA
 *}
 <section id="parallaxMod">
   <div class="row">
@@ -30,7 +30,7 @@
       </div>
       <div class="container parallax-container">
         <div class="{$datas['title_css']}">
-          <h1>{$datas['title_parallaxMod']}</h1>
+          <h1 style="color:{$datas['title_color']}; font-size:{$datas['title_size']}">{$datas['title']}</h1>
         </div>
         <div class="parallax-content">
           {$datas['main_body']|unescape: "html" nofilter}
