@@ -17,7 +17,7 @@ Also, there is the option to modify or add any CSS and/or JS in order to custom 
 If you need further details, feel free to contact me at: gael@luxury-concept.com
 
 # Change-log
-v2.*.*
+v2.0.0
 
  - Source code improvements of the module,
  - Database management for multi-lang website,
