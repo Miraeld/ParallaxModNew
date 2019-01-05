@@ -33,7 +33,7 @@
           <h1 style="color:{$datas['title_color']}; font-size:{$datas['title_size']}">{$datas['title']}</h1>
         </div>
         <div class="parallax-content">
-          {$datas['main_body']|unescape: "html" nofilter}
+          {$datas['main_body'] nofilter}
 
         </div>
       </div>

@@ -23,6 +23,7 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+
 $sql = array();
 $sql[] = 'DROP TABLE `' . _DB_PREFIX_ . 'parallaxMod`';
 $sql[] = 'DROP TABLE `' . _DB_PREFIX_ . 'parallaxMod_lang`';
