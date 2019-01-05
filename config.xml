@@ -4,8 +4,8 @@
     <displayName><![CDATA[Parallax Module]]></displayName>
     <version><![CDATA[2.0.0]]></version>
     <description><![CDATA[This module is allowing you to add a parallax effect on your shop homepage]]></description>
-    <author><![CDATA[Ga&euml;l Robin]]></author>
-    <tab><![CDATA[front_office_features]]></tab>
+    <author><![CDATA[Gael Robin]]></author>
+    <tab><![CDATA[administration]]></tab>
 	<confirmUninstall><![CDATA[Are you sure you want to delete this module?]]></confirmUninstall>
     <is_configurable>1</is_configurable>
     <need_instance>0</need_instance>

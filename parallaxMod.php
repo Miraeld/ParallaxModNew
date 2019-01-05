@@ -1,6 +1,6 @@
 <?php
 /**
-* 2007-2019 PrestaShop
+* 2007-2019 Gaël ROBIN
 *
 * NOTICE OF LICENSE
 *
@@ -18,10 +18,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2019 PrestaShop SA
+*  @author    Gaël ROBIN <gael@luxury-concept.com>
+*  @copyright 2007-2019 Pimclick
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+*
 */
 
 if (!defined('_PS_VERSION_')) {
@@ -34,10 +34,10 @@ class ParallaxMod extends Module
 
     public function __construct()
     {
-        $this->name = 'parallaxMod';
+        $this->name = 'parallaxmod';
         $this->tab = 'administration';
         $this->version = '2.0.0';
-        $this->author = 'Gaël Robin';
+        $this->author = 'Gael Robin';
         $this->need_instance = 1;
 
         /**
@@ -48,7 +48,7 @@ class ParallaxMod extends Module
         parent::__construct();
 
         $this->displayName = $this->l('Parallax Module');
-        $this->description = $this->l('This module is allowing you to add a parallax effect on your shop homepage');
+        $this->description = $this->l('This module is allowing you to add a parallax effect on the home page of your shop');
 
         $this->confirmUninstall = $this->l('Are you sure you want to delete this module?');
 
@@ -168,6 +168,7 @@ class ParallaxMod extends Module
                  ),
                  array(
                     'type' => 'textarea',
+                    'col' => 6,
                     'label' => $this->l('Description content:'),
                     'name' => 'main_body',
                     'lang' => true,
@@ -202,10 +203,6 @@ class ParallaxMod extends Module
                     'name' => 'height',
                     'label' => $this->l('Height'),
                   ),
-                  array(
-                    'type'=>'hidden',
-                    'name'=>'pathforimg',
-                  )
               ),
               'submit' => array(
                   'title' => $this->l('Save'),
@@ -234,7 +231,6 @@ protected function getConfigFormValues()
       $fields['height'] = $data_db['height'];
       $fields['title_color'] = $data_db['title_color'];
       $fields['title_size'] = $data_db['title_size'];
-      $fields['pathforimg'] = $data_db['img_path'];
       return $fields;
 
     }
@@ -400,8 +396,10 @@ UPDATE `ps_parallaxMod` as pm
     	   if (!empty($val) && (substr($val,-1,2)!=', '))
     		     $val.=', ';
 
-        ((!empty($value))?(($key =='title' || $key =='main_body')?$val.=$key.' = \''. $value[$lang['id_lang']].'\'':$val.=$key.' = \''. $value.'\''):false);
+             //(CONDITION)?(TRUE):(FALSE);
+          ((!empty($value))?(($key !='titre' || $key !='main_body')?$val.=$key.' = \''. $value[$lang['id_lang']].'\'':$val.=$key.' = \''. $value.'\''):false);
 
+         (!empty($value))?$val.=$key.' = \''. $value.'\'':false;
       }
       /*
 UPDATE `ps_parallaxMod` as pm
@@ -409,18 +407,22 @@ UPDATE `ps_parallaxMod` as pm
     SET pm.title_css = 'newTitleCss', pm.height = 500, pm.title_color='#fff', pm.title_size = '30px', pml.title = 'New Title test'
 	WHERE pml.id_lang =1;
   */
-        $sql[] = 'UPDATE `'._DB_PREFIX_.'parallaxMod` as pm
+  $sql[] = 'UPDATE `'._DB_PREFIX_.'parallaxMod` as pm
               LEFT JOIN `'._DB_PREFIX_.'parallaxMod_lang` as pml ON pm.id_parallaxMod = pml.id_parallaxMod
               SET '.$val.'
               WHERE pml.id_lang = '.$lang['id_lang'];
 
-      }
 
+/* TODO : CORRECT SQL WITH TITLE AND MAIN_BODY LANG */
+
+      }
+      var_dump($sql);
+      exit;
       foreach ($sql as $query) {
 
-          if (Db::getInstance()->execute($query) == false) {
-              return false;
-          }
+          // if (Db::getInstance()->execute($query) == false) {
+          //     return false;
+          // }
       }
       return true;
 
