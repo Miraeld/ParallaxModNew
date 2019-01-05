@@ -2,17 +2,26 @@
 
 Prestashop 1.7.* module
 
-This module create a parallax effect added to your shop home page.
+This module creates a parallax effect on the homepage of your shop.
 
 
-You have the possibility to add the content through a TinyMCE text area which means your custom HTML code.
+The content of the text within the parallax effect is managed with a TinyMCE field which gives you the possibility to add any custom HTML code.
 
 
-Also, you have the possibility to modify or add any CSS and/or JS in order to custom your parallax effect.
+From the back-office, you can manage the customization of the effect such as the background image, the color of the title, the size of the title, etc...
+
+
+Also, there is the option to modify or add any CSS and/or JS in order to custom your parallax effect.
 
 
 If you need further details, feel free to contact me at: gael@luxury-concept.com
 
+# Change-log
+v2.*.*
+
+ - Source code improvements of the module,
+ - Database management for multi-lang website,
+ - Customization improvements.
 
 # Back-office view
 
@@ -28,7 +37,7 @@ This view is used to display on the homepage of your shop a parallax effect.
 
 # License
 
-This project is protected
+This project is protected by
 
 MIT License
 
