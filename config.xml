@@ -2,7 +2,7 @@
 <module>
     <name>parallaxMod</name>
     <displayName><![CDATA[Parallax Module]]></displayName>
-    <version><![CDATA[2.0.0]]></version>
+    <version><![CDATA[2.0.1]]></version>
     <description><![CDATA[This module is allowing you to add a parallax effect on your shop homepage]]></description>
     <author><![CDATA[Gael Robin]]></author>
     <tab><![CDATA[administration]]></tab>

@@ -22,6 +22,7 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+
 window.onload = function(){
     jQuery('#img_path-name').attr('placeholder',jQuery('#pathforimg').val());
 }
